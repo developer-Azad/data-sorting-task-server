@@ -46,12 +46,22 @@ async function run() {
         const doctorsCollection = database.collection('doctors');
 
       app.get('/appointments', async(req, res) => {
+        // const cursor = appointmentCollection.findOne({});
+        // const appointments= await cursor.toArray();
+
         const email = req.query.email;
         const date = new Date(req.query.date).toLocaleDateString();
         const query = {email: email, date: date}
         const cursor = appointmentCollection.find(query);
         const appointments = await cursor.toArray();
         res.json(appointments);
+
+      })
+
+      app.get('/appointmen', async(req, res) => {
+        const cursor = appointmentCollection.find({});
+        const appoint = await cursor.toArray();
+        res.json(appoint);
       })
 
       app.get('/appointments/:id', async(req, res) => {
