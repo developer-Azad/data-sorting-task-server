@@ -44,6 +44,7 @@ async function run() {
         const appointmentCollection = database.collection('appointments');
         const usersCollection = database.collection('users');
         const doctorsCollection = database.collection('doctors');
+        const customersCollection = database.collection('customers');
 
       app.get('/appointments', async(req, res) => {
         // const cursor = appointmentCollection.findOne({});
@@ -63,6 +64,11 @@ async function run() {
         const appoint = await cursor.toArray();
         res.json(appoint);
       })
+      app.get('/customers', async(req, res) => {
+        const cursor = customersCollection.find({});
+        const appoint = await cursor.toArray();
+        res.json(appoint);
+      })
 
       app.get('/appointments/:id', async(req, res) => {
         const id = req.params.id;
@@ -75,6 +81,12 @@ async function run() {
         app.post('/appointments', async(req, res) => {
           const appointment = req.body;
           const result = await appointmentCollection.insertOne(appointment);
+          console.log(result);
+          res.json(result)
+        })
+      app.post('/customers', async(req, res) => {
+          const customer = req.body;
+        const result = await customersCollection.insertOne(customer);
           console.log(result);
           res.json(result)
         })
@@ -167,6 +179,15 @@ async function run() {
             payment_method_types: ['card']
           });
           res.json({clientSecret: paymentIntent.client_secret})
+        })
+
+        // delete user
+        app.delete('/customers/:id', async(req, res) => {
+            const id = req.params.id;
+            const query = {_id: ObjectId(id)};
+            const result = await customersCollection.deleteOne(query);
+            console.log('deleted products id : ', result);
+            res.json(result);
         })
     }
     finally{
